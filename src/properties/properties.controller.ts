@@ -1,23 +1,28 @@
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, Subscriber } from 'rxjs';
-import { CreatePropertyDto } from './create-property.dto';
+import { CreatePropertyDto } from './dto/create-property.dto';
+import { PropertiesService } from './properties.service';
+import { Property } from './interfaces/property.interface';
 
 @Controller('properties')
 export class PropertiesController {
+  constructor(private propertiesService: PropertiesService) {
+  }
   @Get()
   findAll(@Req() request: Request): string {
     return 'This action returns all properties';
   }
   @Post()
-  create(@Body() createCatDto: CreatePropertyDto): string {
-    return 'This action adds the following property : ' + createCatDto.name;
+  create(@Body() createPropertyDto: CreatePropertyDto): Property {
+    const isNumber = typeof createPropertyDto.nbLots === 'number';
+    return this.propertiesService.create(createPropertyDto);
   }
   @Get(':id')
-  findOne(@Param() params): Observable<any> {
-    return new Observable((observer: Subscriber<{ foo: string }>) => {
+  findOne(@Param('id') id: number): Observable<any> {
+    return new Observable((observer: Subscriber<{ foo: number }>) => {
       observer.next({
-        foo: params.id,
+        foo: id,
       });
       observer.complete();
     });
