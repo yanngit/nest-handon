@@ -8,16 +8,19 @@ import {
   Param,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, Subscriber } from 'rxjs';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { PropertiesService } from './properties.service';
 import { Property } from './interfaces/property.interface';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('properties')
 export class PropertiesController {
   constructor(private propertiesService: PropertiesService) {}
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Req() request: Request): string {
     return 'This action returns all properties';
