@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, Subscriber } from 'rxjs';
-import { CreatePropertyDto } from "./create-property.dto";
+import { CreatePropertyDto } from './create-property.dto';
 
 @Controller('properties')
 export class PropertiesController {
