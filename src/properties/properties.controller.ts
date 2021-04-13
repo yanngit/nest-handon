@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, Subscriber } from 'rxjs';
 import { CreatePropertyDto } from './dto/create-property.dto';
@@ -7,8 +17,7 @@ import { Property } from './interfaces/property.interface';
 
 @Controller('properties')
 export class PropertiesController {
-  constructor(private propertiesService: PropertiesService) {
-  }
+  constructor(private propertiesService: PropertiesService) {}
   @Get()
   findAll(@Req() request: Request): string {
     return 'This action returns all properties';

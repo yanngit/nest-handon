@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { PropertiesModule } from './properties/properties.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { PropertiesController } from './properties/properties.controller';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [PropertiesModule],
+  imports: [PropertiesModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
