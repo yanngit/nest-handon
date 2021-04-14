@@ -34,6 +34,21 @@ $ npm install
 
 ## Running the app
 
+### Run a DB instance in docker
+
+```bash
+# Basic MariaDB docker container
+docker run --name mariadb -h -e 127.0.0.1 MYSQL_ROOT_PASSWORD=s3cr3t -p 3306:3306 -d mariadb
+# Log in MariaDB and create the nestjs database
+mysql -h 127.0.0.1 -u root -ps3cr3t
+create database nestjs;
+#For dev purpose we grant all for root user from any host
+GRANT ALL ON *.* TO 'root'@'%';
+exit
+```
+
+### Run the Nest app
+
 ```bash
 # development
 $ npm run start

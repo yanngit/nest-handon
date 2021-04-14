@@ -1,31 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UserModel } from './user.model';
+import { User } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 //This should be a global variable
 const saltRounds = 10;
 
 @Injectable()
 export class UsersService {
-  private users: UserModel[] = [];
+  private users: User[] = [];
 
-  constructor() {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {
     this.createUser('john', 'changeme');
     this.createUser('annie', 'hello');
   }
-  async findOne(username: string): Promise<UserModel | undefined> {
+  async findOne(username: string): Promise<User | undefined> {
     return this.users.find((user) => user.username === username);
   }
 
-  async createUser(username: string, password: string): Promise<UserModel> {
+  async createUser(username: string, password: string): Promise<User> {
     const hash = await bcrypt.hash(password, saltRounds);
-    const newUser: UserModel = {
-      userId: this.users.length,
+    const newUser: User = {
+      id: null,
       username: username,
       password: hash,
+      isActive: true,
     };
-    this.users.push(newUser);
-    return newUser;
+    return this.usersRepository.save(newUser);
   }
 
   private generateHash(plainText: string): string {

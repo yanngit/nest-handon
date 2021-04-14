@@ -18,9 +18,9 @@ import { Property } from './interfaces/property.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('properties')
+@UseGuards(JwtAuthGuard)
 export class PropertiesController {
   constructor(private propertiesService: PropertiesService) {}
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Req() request: Request): string {
     return 'This action returns all properties';

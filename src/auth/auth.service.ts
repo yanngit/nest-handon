@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
-import { UserModel } from '../users/user.model';
+import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
 //This should be a global variable
@@ -18,7 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<UserModel> {
+  async validateUser(username: string, password: string): Promise<User> {
     const user = await this.usersService.findOne(username);
     if (user) {
       const isSame = await bcrypt.compare(password, user.password);
@@ -34,8 +34,8 @@ export class AuthService {
     }
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: User) {
+    const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
