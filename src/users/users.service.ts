@@ -15,22 +15,21 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {
-    this.createUser('john', 'changeme');
-    this.createUser('annie', 'hello');
+    /*this.createUser('john', 'changeme');
+    this.createUser('annie', 'hello');*/
   }
+
   async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+    return this.usersRepository.findOne(username);
   }
 
   async createUser(username: string, password: string): Promise<User> {
     const hash = await bcrypt.hash(password, saltRounds);
-    const newUser: User = {
-      id: null,
+    const user = this.usersRepository.create({
       username: username,
       password: hash,
-      isActive: true,
-    };
-    return this.usersRepository.save(newUser);
+    });
+    return this.usersRepository.save(user);
   }
 
   private generateHash(plainText: string): string {

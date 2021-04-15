@@ -28,7 +28,6 @@ export class PropertiesController {
 
   @Post()
   create(@Body() createPropertyDto: CreatePropertyDto): Property {
-    const isNumber = typeof createPropertyDto.nbLots === 'number';
     return this.propertiesService.create(createPropertyDto);
   }
 
