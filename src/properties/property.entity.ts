@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../users/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Property {
@@ -12,6 +13,7 @@ export class Property {
   @Column()
   nbLots: number;
 
-  /*@ManyToOne((user) => User, (user) => user.properties)
-  user: User;*/
+  @ManyToOne((user) => User, (user) => user.properties)
+  @Exclude()
+  user: User;
 }

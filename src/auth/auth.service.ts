@@ -8,9 +8,6 @@ import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 
-//This should be a global variable
-const saltRounds = 10;
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,8 +15,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.usersService.findOne(username);
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.usersService.findOne(email);
     if (user) {
       const isSame = await bcrypt.compare(password, user.password);
       if (isSame) {
@@ -27,10 +24,10 @@ export class AuthService {
         return obfuscatedUser;
       }
       throw new UnauthorizedException(
-        'Password not matching for user ' + username,
+        'Password not matching for user ' + email,
       );
     } else {
-      throw new BadRequestException('Cannot find user ' + username);
+      throw new BadRequestException('Cannot find user ' + email);
     }
   }
 

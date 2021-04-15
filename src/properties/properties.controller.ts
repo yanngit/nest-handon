@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,13 +10,14 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable, Subscriber } from 'rxjs';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { PropertiesService } from './properties.service';
-import { Property } from './interfaces/property.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from '../users/user.entity';
 
 @Controller('properties')
 @UseGuards(JwtAuthGuard)
@@ -26,9 +28,18 @@ export class PropertiesController {
     return 'This action returns all properties';
   }
 
+  /*Used to serialized returned objects.
+   * With this, the @Exclude in the entity is taken into account for serialisation*/
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createPropertyDto: CreatePropertyDto): Property {
-    return this.propertiesService.create(createPropertyDto);
+  create(
+    @Req() request: Request,
+    @Body() createPropertyDto: CreatePropertyDto,
+  ): Promise<CreatePropertyDto> {
+    return this.propertiesService.create(
+      request.user as User,
+      createPropertyDto,
+    );
   }
 
   @Get(':id')
