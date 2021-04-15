@@ -18,6 +18,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { PropertiesService } from './properties.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from '../users/user.entity';
+import { Property } from './property.entity';
 
 @Controller('properties')
 @UseGuards(JwtAuthGuard)
@@ -35,7 +36,7 @@ export class PropertiesController {
   create(
     @Req() request: Request,
     @Body() createPropertyDto: CreatePropertyDto,
-  ): Promise<CreatePropertyDto> {
+  ): Promise<Property> {
     return this.propertiesService.create(
       request.user as User,
       createPropertyDto,

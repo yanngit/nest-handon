@@ -32,13 +32,13 @@
 $ npm install
 ```
 
-## Running the app
+## Running the app in dev
 
 ### Run a DB instance in docker
 
 ```bash
 # Basic MariaDB docker container
-docker run --name mariadb -h -e 127.0.0.1 MYSQL_ROOT_PASSWORD=s3cr3t -p 3306:3306 -d mariadb
+docker run --name mariadb -h 127.0.0.1 -e MYSQL_ROOT_PASSWORD=s3cr3t -p 3306:3306 -d mariadb
 # Log in MariaDB and create the nestjs database
 mysql -h 127.0.0.1 -u root -ps3cr3t
 create database nestjs;
@@ -48,7 +48,7 @@ exit
 ```
 
 ### Run the Nest app
-
+## Run it on your machine
 ```bash
 # development
 $ npm run start
@@ -73,16 +73,25 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Run docker production image
+For production we are using mariadb installed on the host (or somewhere else) but not in docker.
+We are also not using the .env file in the repos because credentials for production should be kept secret. 
+That's why for the production the .env file is removed and we need to manually create an env file and pass it to docker run.
+```bash
+# build the image
+$ docker build -t myapp .
+# create a file (MY_PROD_ENV_FILE) with env var
+#DATABASE_HOST
+#DATABASE_PORT
+#DATABASE_USERNAME
+#DATABASE_PASSWORD
+#DATABASE_DB_NAME
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# run the image
+$ docker run -d -env-file MY_PROD_ENV_FILE --name myapp -p 3000:3000 myapp
+```
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
+For the moment network issues are not addressed, but it will be in the future.
 ## License
 
 Nest is [MIT licensed](LICENSE).

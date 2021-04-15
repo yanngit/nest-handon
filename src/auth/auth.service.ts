@@ -27,7 +27,7 @@ export class AuthService {
         'Password not matching for user ' + email,
       );
     } else {
-      throw new BadRequestException('Cannot find user ' + email);
+      throw new UnauthorizedException('Cannot find user ' + email);
     }
   }
 

@@ -13,10 +13,7 @@ export class PropertiesService {
   ) {}
 
   create(user: User, createPropertyDto: CreatePropertyDto): Promise<Property> {
-    const property = this.propertyRepository.create({
-      name: createPropertyDto.name,
-      nbLots: createPropertyDto.nbLots,
-    });
+    const property = this.propertyRepository.create(createPropertyDto);
     property.user = user;
     return this.propertyRepository.save(property);
   }

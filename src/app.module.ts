@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -34,6 +35,8 @@ import { ConfigModule } from '@nestjs/config';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes(PropertiesController);
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes(PropertiesController, UsersController);
   }
 }
