@@ -24,8 +24,8 @@ import { User } from '../users/user.entity';
 export class PropertiesController {
   constructor(private propertiesService: PropertiesService) {}
   @Get()
-  findAll(@Req() request: Request): string {
-    return 'This action returns all properties';
+  findAll(@Req() request: Request): Promise<CreatePropertyDto[]> {
+    return this.propertiesService.findAll(request.user as User);
   }
 
   /*Used to serialized returned objects.

@@ -3,14 +3,10 @@ import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-//This should be a global variable
-const saltRounds = 10;
+import { authConstants } from '../auth/constants';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
-
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -32,16 +28,12 @@ export class UsersService {
     username: string,
     password: string,
   ): Promise<User> {
-    const hash = await bcrypt.hash(password, saltRounds);
+    const hash = await bcrypt.hash(password, authConstants.jwtExpirationTime);
     const user = this.usersRepository.create({
       email,
       username,
       password: hash,
     });
     return this.usersRepository.save(user);
-  }
-
-  private generateHash(plainText: string): string {
-    return bcrypt.hashSync(plainText, saltRounds);
   }
 }

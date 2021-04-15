@@ -21,7 +21,7 @@ export class PropertiesService {
     return this.propertyRepository.save(property);
   }
 
-  findAll(): Promise<Property[]> {
-    return this.propertyRepository.find();
+  findAll(user: User): Promise<Property[]> {
+    return this.propertyRepository.find({ user: user });
   }
 }
