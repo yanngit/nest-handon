@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -17,7 +18,13 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto): Promise<void | User> {
+    return this.usersService.create(createUserDto).catch((err) => {
+      if ((err.code = 'ER_DUP_ENTRY')) {
+        throw new BadRequestException(
+          'A user with this email is already existing',
+        );
+      }
+    });
   }
 }

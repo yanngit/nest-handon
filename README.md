@@ -80,13 +80,7 @@ That's why for the production the .env file is removed and we need to manually c
 ```bash
 # build the image
 $ docker build -t myapp .
-# create a file (MY_PROD_ENV_FILE) with env var
-#DATABASE_HOST
-#DATABASE_PORT
-#DATABASE_USERNAME
-#DATABASE_PASSWORD
-#DATABASE_DB_NAME
-
+# create a file (MY_PROD_ENV_FILE) with all env vars defined in .env
 # run the image
 $ docker run -d -env-file MY_PROD_ENV_FILE --name myapp -p 3000:3000 myapp
 ```

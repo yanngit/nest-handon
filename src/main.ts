@@ -3,10 +3,11 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './http-exception.filter';
+import * as process from 'process';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: true,
+    logger: process.env.NODE_ENV !== 'production',
   });
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,6 +16,6 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(process.env.APP_PORT);
 }
 bootstrap();
