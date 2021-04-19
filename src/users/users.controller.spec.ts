@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { repositoryMockFactory } from '../../test/util';
+import { repositoryMockFactory } from '../test-utils';
 
 describe('UsersController', () => {
   let usersController: UsersController;

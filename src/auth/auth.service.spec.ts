@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { authConstants } from './constants';
 import { UnauthorizedException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { repositoryMockFactory } from '../../test/util';
+import { repositoryMockFactory } from '../test-utils';
 
 describe('AuthService', () => {
   let authService: AuthService;
