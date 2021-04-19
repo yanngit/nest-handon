@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import {
+  Injectable,
+  MiddlewareConsumer,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PropertiesModule } from './properties/properties.module';
@@ -6,17 +11,19 @@ import { LoggerMiddleware } from './logger.middleware';
 import { PropertiesController } from './properties/properties.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import {
+  TypeOrmModule,
+  TypeOrmModuleOptions,
+  TypeOrmOptionsFactory,
+} from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersController } from './users/users.controller';
+import { APP_PIPE } from '@nestjs/core';
 
-@Module({
-  imports: [
-    PropertiesModule,
-    AuthModule,
-    UsersModule,
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
+@Injectable()
+export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    return {
       type: 'mysql',
       host: process.env.DATABASE_HOST,
       port: parseInt(process.env.DATABASE_PORT),
@@ -25,13 +32,31 @@ import { UsersController } from './users/users.controller';
       database: process.env.DATABASE_DB_NAME,
       autoLoadEntities: true,
       entities: [],
-      /*Setup this to false in production, or data loss can occur*/
+      //Setup this to false in production, or data loss can occur
       synchronize: true,
-      //logging: true,
+    };
+  }
+}
+
+@Module({
+  imports: [
+    PropertiesModule,
+    AuthModule,
+    UsersModule,
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRootAsync({
+      imports: [TypeOrmConfigService],
+      useClass: TypeOrmConfigService,
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

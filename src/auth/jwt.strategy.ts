@@ -20,6 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     /*Here is the place to add more user info for backend processing
      * It should not be inside the JWT because JWT must have minimal infos
      */
-    return this.usersService.findById(payload.sub);
+    return this.usersService.findOneById(payload.sub);
   }
 }

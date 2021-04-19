@@ -20,10 +20,12 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<void | User> {
     return this.usersService.create(createUserDto).catch((err) => {
-      if ((err.code = 'ER_DUP_ENTRY')) {
+      if (err.code == 'ER_DUP_ENTRY') {
         throw new BadRequestException(
           'A user with this email is already existing',
         );
+      } else {
+        throw new BadRequestException(err.code);
       }
     });
   }

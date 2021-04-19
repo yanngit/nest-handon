@@ -16,11 +16,15 @@ export class UsersService {
     this.createUser('emailAnnie@gmail.com', 'annie', 'hello');*/
   }
 
-  async findOne(email: string): Promise<User | undefined> {
+  public async findOneByEmail(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ email });
   }
 
-  async findById(id: string): Promise<User | undefined> {
+  public async fuck(): Promise<User | undefined> {
+    return this.usersRepository.findOne({ email: 'test' });
+  }
+
+  async findOneById(id: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ id });
   }
 

@@ -12,6 +12,7 @@ export class User {
   username: string;
 
   @Column({ unique: true })
+  /* TODO : See if we can index this column*/
   email: string;
 
   @Column()
