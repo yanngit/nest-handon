@@ -18,7 +18,7 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<void | User> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto).catch((err) => {
       if (err.code == 'ER_DUP_ENTRY') {
         throw new BadRequestException(

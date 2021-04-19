@@ -25,7 +25,7 @@ import { Property } from './property.entity';
 export class PropertiesController {
   constructor(private propertiesService: PropertiesService) {}
   @Get()
-  findAll(@Req() request: Request): Promise<CreatePropertyDto[]> {
+  async findAll(@Req() request: Request): Promise<CreatePropertyDto[]> {
     return this.propertiesService.findAll(request.user as User);
   }
 
@@ -33,7 +33,7 @@ export class PropertiesController {
    * With this, the @Exclude in the entity is taken into account for serialisation*/
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(
+  async create(
     @Req() request: Request,
     @Body() createPropertyDto: CreatePropertyDto,
   ): Promise<Property> {
@@ -44,13 +44,11 @@ export class PropertiesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Observable<any> {
-    return new Observable((observer: Subscriber<{ foo: number }>) => {
-      observer.next({
-        foo: id,
-      });
-      observer.complete();
-    });
+  findOne(
+    @Param('id') id: number,
+    @Req() request: Request,
+  ): Promise<Property | undefined> {
+    return this.propertiesService.findOne(request.user as User, id);
   }
 
   @Delete()

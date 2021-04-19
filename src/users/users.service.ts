@@ -11,17 +11,10 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {
-    /*this.createUser('emailJohn@gmail.com', 'john', 'changeme');
-    this.createUser('emailAnnie@gmail.com', 'annie', 'hello');*/
-  }
+  ) {}
 
   public async findOneByEmail(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ email });
-  }
-
-  public async fuck(): Promise<User | undefined> {
-    return this.usersRepository.findOne({ email: 'test' });
   }
 
   async findOneById(id: string): Promise<User | undefined> {
