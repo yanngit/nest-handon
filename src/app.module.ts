@@ -18,7 +18,8 @@ import {
 } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UsersController } from './users/users.controller';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -55,6 +56,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })
