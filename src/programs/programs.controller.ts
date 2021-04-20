@@ -13,14 +13,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { Observable, Subscriber } from 'rxjs';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { ProgramsService } from './programs.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from '../users/user.entity';
 import { Program } from './program.entity';
 
-@Controller('properties')
+@Controller('programs')
 @UseGuards(JwtAuthGuard)
 export class ProgramsController {
   constructor(private programsService: ProgramsService) {}
