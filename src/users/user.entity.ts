@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Property } from '../properties/property.entity';
+import { Program } from '../programs/program.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -22,7 +22,7 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany((property) => Property, (property) => property.user)
+  @OneToMany((property) => Program, (property) => property.user)
   @Exclude()
-  properties: Property[];
+  programs: Program[];
 }

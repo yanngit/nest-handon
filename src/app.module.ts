@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PropertiesModule } from './properties/properties.module';
+import { ProgramsModule } from './programs/programs.module';
 import { LoggerMiddleware } from './logger.middleware';
-import { PropertiesController } from './properties/properties.controller';
+import { ProgramsController } from './programs/programs.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import {
@@ -41,7 +41,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
 @Module({
   imports: [
-    PropertiesModule,
+    ProgramsModule,
     AuthModule,
     UsersModule,
     ConfigModule.forRoot(),
@@ -67,6 +67,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes(PropertiesController, UsersController);
+      .forRoutes(ProgramsController, UsersController);
   }
 }

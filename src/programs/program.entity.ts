@@ -3,7 +3,7 @@ import { User } from '../users/user.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()
-export class Property {
+export class Program {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,7 +13,7 @@ export class Property {
   @Column()
   nbLots: number;
 
-  @ManyToOne((user) => User, (user) => user.properties)
+  @ManyToOne((user) => User, (user) => user.programs)
   @Exclude()
   user: User;
 }

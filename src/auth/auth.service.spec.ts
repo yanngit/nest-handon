@@ -71,6 +71,6 @@ function getValidUser(): User {
     email: 'jest@facebook.com',
     password: 'somehashedpassword',
     isActive: true,
-    properties: [],
+    programs: [],
   };
 }
