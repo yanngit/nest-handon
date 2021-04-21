@@ -19,7 +19,7 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { UsersController } from './users/users.controller';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { ExceptionsFilter } from './exceptions.filter';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -35,6 +35,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [],
       //Setup this to false in production, or data loss can occur
       synchronize: true,
+      logging: true,
+      logger: 'file',
     };
   }
 }
@@ -59,7 +61,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     },
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
+      useClass: ExceptionsFilter,
     },
   ],
 })

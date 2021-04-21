@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpException,
   HttpStatus,
@@ -47,14 +48,9 @@ export class ProgramsController {
     return this.programsService.findOne(request.user as User, id);
   }
 
-  @Delete()
-  delete() {
-    throw new HttpException(
-      {
-        status: HttpStatus.FORBIDDEN,
-        error: 'You are not authorized to delete a program',
-      },
-      HttpStatus.FORBIDDEN,
-    );
+  @Delete(':id')
+  delete(@Param('id') id: number, @Req() request: Request) {
+    return this.programsService.delete(request.user as User, id);
+    //throw new ForbiddenException('You are not authorized to delete a program');
   }
 }

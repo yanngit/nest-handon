@@ -28,4 +28,8 @@ export class ProgramsService {
   async findOne(user: User, id: number): Promise<Program | undefined> {
     return this.programRepository.findOne({ user: user, id: id });
   }
+
+  async delete(user: User, id: number) {
+    return this.programRepository.softDelete({ user: user, id: id });
+  }
 }
