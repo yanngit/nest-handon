@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import * as process from 'process';
-import { LoggingInterceptor } from './logging.interceptor';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 
@@ -31,7 +30,6 @@ async function bootstrap() {
     }),
   });
   app.enableCors();
-  app.useGlobalInterceptors(new LoggingInterceptor());
   await app.listen(process.env.APP_PORT);
 }
 bootstrap();

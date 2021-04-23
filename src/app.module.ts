@@ -1,13 +1,7 @@
-import {
-  Injectable,
-  MiddlewareConsumer,
-  Module,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Injectable, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramsModule } from './programs/programs.module';
-import { ProgramsController } from './programs/programs.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import {
@@ -16,10 +10,11 @@ import {
   TypeOrmOptionsFactory,
 } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { UsersController } from './users/users.controller';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ExceptionsFilter } from './exceptions.filter';
 import 'winston-daily-rotate-file';
+import { LoggingInterceptor } from './logging.interceptor';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -35,7 +30,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       entities: [],
       //Setup this to false in production, or data loss can occur
       synchronize: true,
-      logging: true,
+      logging: process.env.LOGGER_ENABLE_ORM === 'true' ? true : false,
       logger: 'file',
     };
   }
@@ -51,6 +46,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       imports: [TypeOrmConfigService],
       useClass: TypeOrmConfigService,
     }),
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -62,6 +58,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     {
       provide: APP_FILTER,
       useClass: ExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
 })
