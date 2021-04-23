@@ -22,13 +22,15 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## How to install env
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+In order to run the app, you need to have node 15.X and npm 7.X installed.
 
 ## Installation
 
 ```bash
+$ npm install -g @nestjs/cli
+$ cd nest-handon
 $ npm install
 ```
 

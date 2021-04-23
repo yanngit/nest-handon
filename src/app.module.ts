@@ -20,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersController } from './users/users.controller';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ExceptionsFilter } from './exceptions.filter';
+import 'winston-daily-rotate-file';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
