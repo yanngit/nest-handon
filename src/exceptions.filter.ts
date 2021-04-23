@@ -4,16 +4,16 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { QueryFailedError } from 'typeorm';
 
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(ExceptionsFilter.name);
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
 
     let status;
     let res;
@@ -30,6 +30,8 @@ export class ExceptionsFilter implements ExceptionFilter {
     res['path'] = request.url;
     res['params'] = request.params;
     res['body'] = request.body;
+
+    this.logger.error(res);
 
     response.status(status).json(res);
   }

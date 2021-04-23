@@ -7,7 +7,6 @@ import {
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProgramsModule } from './programs/programs.module';
-import { LoggerMiddleware } from './logger.middleware';
 import { ProgramsController } from './programs/programs.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -66,10 +65,4 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     },
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes(ProgramsController, UsersController);
-  }
-}
+export class AppModule {}
