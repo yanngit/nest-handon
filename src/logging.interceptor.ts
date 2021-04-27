@@ -34,8 +34,6 @@ export class LoggingInterceptor implements NestInterceptor {
 
     this.logger.log(message);
 
-    const now = Date.now();
-
     return next.handle().pipe(
       tap(() => {
         const httpContext = context.switchToHttp();
@@ -45,12 +43,7 @@ export class LoggingInterceptor implements NestInterceptor {
           path: req.path,
           user: req.user.email,
           statusCode: res.statusCode,
-          processTime: Date.now() - now,
         };
-
-        if (message.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-          message['error'] = res.message;
-        }
         this.logger.log(message);
       }),
     );

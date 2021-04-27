@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { MetricsService } from './metrics.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class MetricsInterceptor implements NestInterceptor {
@@ -15,6 +16,12 @@ export class MetricsInterceptor implements NestInterceptor {
     const httpContext = context.switchToHttp();
     const req = httpContext.getRequest();
     this.metricsService.increaseGlobalHttpCounter(req);
-    return next.handle();
+    const requestTime = Date.now();
+    return next.handle().pipe(
+      tap((next) => {
+        const processingTime = Date.now() - requestTime;
+        this.metricsService.addProcessingTime(req, processingTime);
+      }),
+    );
   }
 }

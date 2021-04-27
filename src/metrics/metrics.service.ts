@@ -1,18 +1,22 @@
 import * as promClient from 'prom-client';
-import { Counter } from 'prom-client';
+import { Counter, Histogram } from 'prom-client';
 
 export class MetricsService {
   private prefix = 'nest_';
   private globalHttpCounter: Counter<any>;
+  private globalHttpDuration: Histogram<any>;
   private errorHttpCounter: Counter<any>;
 
   constructor() {
     promClient.register.clear();
-    promClient.collectDefaultMetrics({
-      //prefix: this.prefix,
-    });
+    promClient.collectDefaultMetrics({});
     this.globalHttpCounter = this.registerCounter(
       'http_requests_endpoint_total',
+      'Number of http requests for a particular endpoint',
+      ['method', 'endpoint'],
+    );
+    this.globalHttpDuration = this.registerHistogram(
+      'http_requests_endpoint_duration',
       'Number of http requests for a particular endpoint',
       ['method', 'endpoint'],
     );
@@ -31,6 +35,14 @@ export class MetricsService {
   public increaseErrorHttpCounter(request: Request): void {
     const { method, endpoint } = this.parseLabels(request);
     this.errorHttpCounter.inc({ method, endpoint }, 1);
+  }
+
+  addProcessingTime(request: Request, processingTimeInMillisecond: number) {
+    const { method, endpoint } = this.parseLabels(request);
+    this.globalHttpDuration.observe(
+      { method, endpoint },
+      processingTimeInMillisecond / 1000,
+    );
   }
 
   private parseLabels(request: Request): { method: string; endpoint: string } {
@@ -55,6 +67,19 @@ export class MetricsService {
       labelNames,
     });
     return counter;
+  }
+
+  private registerHistogram(
+    name: string,
+    help: string,
+    labelNames: string[],
+  ): Histogram<any> {
+    const histogram = new promClient.Histogram({
+      name: this.prefix + name,
+      help,
+      labelNames,
+    });
+    return histogram;
   }
 
   public metrics(): Promise<string> {
