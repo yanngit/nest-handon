@@ -3,6 +3,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import * as process from 'process';
 import * as winston from 'winston';
+import { ElasticsearchTransport } from 'winston-elasticsearch';
+import { Client } from '@elastic/elasticsearch';
 import { WinstonModule } from 'nest-winston';
 
 const transport = new winston.transports.DailyRotateFile({
@@ -19,15 +21,38 @@ function setupLoggerTransports(): any[] {
   if (process.env.LOGGER_ENABLE_CONSOLE_OUTPUT === 'true') {
     loggerTransports.push(new winston.transports.Console());
   }
+  if (process.env.LOGGER_ENABLE_ELASTICSEARCH_OUTPUT === 'true') {
+    const client = new Client({
+      node:
+        'http://' +
+        process.env.ELASTICSEARCH_HOST +
+        ':' +
+        process.env.ELASTICSEARCH_PORT,
+      auth: {
+        username: process.env.ELASTICSEARCH_USERNAME,
+        password: process.env.ELASTICSEARCH_PASSWORD,
+      },
+    });
+    const esTransportOpts = {
+      level: process.env.ELASTICSEARCH_LOG_LEVEL,
+      index: process.env.ELASTICSEARCH_INDEX,
+      client,
+    };
+    const esTransport = new ElasticsearchTransport(esTransportOpts);
+    esTransport.on('warning', (error) => {
+      console.error('Warning caught', error);
+    });
+    loggerTransports.push(esTransport);
+  }
   return loggerTransports;
 }
 
 async function bootstrap() {
-  const loggerTransports = setupLoggerTransports();
+  const logger = WinstonModule.createLogger({
+    transports: setupLoggerTransports(),
+  });
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: WinstonModule.createLogger({
-      transports: loggerTransports,
-    }),
+    logger,
   });
   app.enableCors();
   await app.listen(process.env.APP_PORT);

@@ -38,6 +38,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
 @Module({
   imports: [
+    MetricsModule,
     ProgramsModule,
     AuthModule,
     UsersModule,
@@ -46,7 +47,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       imports: [TypeOrmConfigService],
       useClass: TypeOrmConfigService,
     }),
-    MetricsModule,
   ],
   controllers: [AppController],
   providers: [

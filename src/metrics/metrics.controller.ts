@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { PrometheusService } from './prometheus.service';
+import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
 export class MetricsController {
-  constructor(private prometheusService: PrometheusService) {}
+  constructor(private prometheusService: MetricsService) {}
   @Get()
   getMetrics() {
-    return this.prometheusService.getMetrics();
+    return this.prometheusService.metrics();
   }
 }

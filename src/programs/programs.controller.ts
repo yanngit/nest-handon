@@ -3,10 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Req,
@@ -19,11 +16,14 @@ import { ProgramsService } from './programs.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from '../users/user.entity';
 import { Program } from './program.entity';
+import { MetricsInterceptor } from '../metrics/metrics.interceptor';
 
 @Controller('programs')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(MetricsInterceptor)
 export class ProgramsController {
   constructor(private programsService: ProgramsService) {}
+
   @Get()
   async findAll(@Req() request: Request): Promise<CreateProgramDto[]> {
     return this.programsService.findAll(request.user as User);

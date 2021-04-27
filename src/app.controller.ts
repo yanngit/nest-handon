@@ -1,9 +1,18 @@
-import { Request, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Request,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { LocalAuthGuard } from './auth/local-auth.guard';
+import { MetricsInterceptor } from './metrics/metrics.interceptor';
 
 @Controller()
+@UseInterceptors(MetricsInterceptor)
 export class AppController {
   constructor(
     private readonly appService: AppService,

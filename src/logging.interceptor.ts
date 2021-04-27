@@ -1,5 +1,4 @@
 import {
-  Injectable,
   NestInterceptor,
   ExecutionContext,
   CallHandler,
@@ -8,13 +7,9 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { PrometheusService } from './metrics/prometheus.service';
 
-@Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
-
-  constructor(private prometheusService: PrometheusService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const httpContext = context.switchToHttp();
@@ -27,7 +22,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const message = {
       type: 'request',
       path: req.path,
-
       date: new Date().toISOString(),
       headers: req.headers,
       params: req.params,
@@ -50,7 +44,6 @@ export class LoggingInterceptor implements NestInterceptor {
           type: 'response',
           path: req.path,
           user: req.user.email,
-          date: new Date().toISOString(),
           statusCode: res.statusCode,
           processTime: Date.now() - now,
         };
@@ -59,7 +52,6 @@ export class LoggingInterceptor implements NestInterceptor {
           message['error'] = res.message;
         }
         this.logger.log(message);
-        this.prometheusService.routeCall(req.path, res.statusCode);
       }),
     );
   }

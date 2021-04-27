@@ -5,14 +5,16 @@ import {
   HttpException,
   HttpStatus,
   Logger,
+  Injectable,
 } from '@nestjs/common';
-import { PrometheusService } from './metrics/prometheus.service';
+import { MetricsService } from './metrics/metrics.service';
 
 @Catch()
+@Injectable()
 export class ExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(ExceptionsFilter.name);
 
-  constructor(private prometheusService: PrometheusService) {}
+  constructor(private metricsService: MetricsService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -38,8 +40,7 @@ export class ExceptionsFilter implements ExceptionFilter {
     res['body'] = request.body;
 
     this.logger.error(res, stack);
-    this.prometheusService.routeCall(request.path, res.statusCode);
-
+    this.metricsService.increaseErrorHttpCounter(request);
     response.status(status).json(res);
   }
 }
