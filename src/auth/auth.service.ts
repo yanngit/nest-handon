@@ -16,8 +16,7 @@ export class AuthService {
     if (user) {
       const isSame = await bcrypt.compare(password, user.password);
       if (isSame) {
-        const obfuscatedUser = { ...user, password: 'CannotDisplayPassword' };
-        return obfuscatedUser;
+        return user;
       }
       throw new UnauthorizedException(
         'Password not matching for user ' + email,

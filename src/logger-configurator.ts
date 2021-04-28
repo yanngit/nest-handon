@@ -44,9 +44,9 @@ export class LoggerConfigurator {
         client,
       };
       const esTransport = new ElasticsearchTransport(esTransportOpts);
-      esTransport.on('warning', (error) => {
-        console.error('Warning caught', error);
-      });
+      /*esTransport.on('warning', (err) => {
+        console.error('Warning caught', err);
+      });*/
       loggerTransports.push(esTransport);
     }
     return loggerTransports;

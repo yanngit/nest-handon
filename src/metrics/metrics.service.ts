@@ -78,6 +78,7 @@ export class MetricsService {
       name: this.prefix + name,
       help,
       labelNames,
+      buckets: [0.1, 0.5, 1, 3, 5],
     });
     return histogram;
   }
